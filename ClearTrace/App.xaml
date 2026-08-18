@@ -3,10 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <SolidColorBrush x:Key="Ink" Color="#101828" />
-        <SolidColorBrush x:Key="Muted" Color="#667085" />
-        <SolidColorBrush x:Key="Line" Color="#E4E7EC" />
-        <SolidColorBrush x:Key="Brand" Color="#635BFF" />
+        <SolidColorBrush x:Key="Ink" Color="#F1F5F9" />
+        <SolidColorBrush x:Key="Muted" Color="#94A3B8" />
+        <SolidColorBrush x:Key="Line" Color="#2C3748" />
+        <SolidColorBrush x:Key="Panel" Color="#182231" />
+        <SolidColorBrush x:Key="PanelMuted" Color="#202C3D" />
+        <SolidColorBrush x:Key="Brand" Color="#2563EB" />
         <Style TargetType="{x:Type Button}">
             <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -18,19 +20,19 @@
             <Setter Property="Background" Value="{StaticResource Brand}" />
             <Setter Property="Padding" Value="16,10" />
             <Setter Property="Template">
-                <Setter.Value><ControlTemplate TargetType="{x:Type Button}"><Border Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" /></Border></ControlTemplate></Setter.Value>
+                <Setter.Value><ControlTemplate TargetType="{x:Type Button}"><Border Background="{TemplateBinding Background}" CornerRadius="7" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" /></Border></ControlTemplate></Setter.Value>
             </Setter>
         </Style>
         <Style x:Key="SecondaryButton" TargetType="{x:Type Button}">
             <Setter Property="Foreground" Value="{StaticResource Ink}" />
-            <Setter Property="Background" Value="#F2F4F7" />
+            <Setter Property="Background" Value="{StaticResource PanelMuted}" />
             <Setter Property="Padding" Value="16,10" />
             <Setter Property="Template">
-                <Setter.Value><ControlTemplate TargetType="{x:Type Button}"><Border Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" /></Border></ControlTemplate></Setter.Value>
+                <Setter.Value><ControlTemplate TargetType="{x:Type Button}"><Border Background="{TemplateBinding Background}" CornerRadius="7" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" /></Border></ControlTemplate></Setter.Value>
             </Setter>
         </Style>
         <Style x:Key="NavButton" TargetType="{x:Type Button}">
-            <Setter Property="Foreground" Value="#C9D2E3" />
+            <Setter Property="Foreground" Value="#B7C3D5" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Padding" Value="14,11" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -41,7 +43,12 @@
         <Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0,0,0,6" />
-            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type ListBoxItem}"><Border x:Name="card" Background="White" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="12" Padding="14"><ContentPresenter /></Border><ControlTemplate.Triggers><Trigger Property="IsSelected" Value="True"><Setter TargetName="card" Property="Background" Value="#F1F0FF" /><Setter TargetName="card" Property="BorderBrush" Value="{StaticResource Brand}" /></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type ListBoxItem}"><Border x:Name="card" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="8" Padding="14"><ContentPresenter /></Border><ControlTemplate.Triggers><Trigger Property="IsSelected" Value="True"><Setter TargetName="card" Property="Background" Value="#172D4D" /><Setter TargetName="card" Property="BorderBrush" Value="{StaticResource Brand}" /></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Width" Value="9" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type ScrollBar}"><Border Background="Transparent" Padding="2"><Track x:Name="PART_Track" Orientation="Vertical" IsDirectionReversed="True"><Track.DecreaseRepeatButton><RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Opacity="0" /></Track.DecreaseRepeatButton><Track.Thumb><Thumb><Thumb.Template><ControlTemplate TargetType="{x:Type Thumb}"><Border Background="#526276" CornerRadius="4" /></ControlTemplate></Thumb.Template></Thumb></Track.Thumb><Track.IncreaseRepeatButton><RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Opacity="0" /></Track.IncreaseRepeatButton></Track></Border></ControlTemplate></Setter.Value></Setter>
         </Style>
     </Application.Resources>
 </Application>

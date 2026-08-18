@@ -2,22 +2,22 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="ClearTrace" Height="760" Width="1220" MinHeight="640" MinWidth="980"
-        WindowStartupLocation="CenterScreen" Background="#F7F8FC" FontFamily="Segoe UI">
+        WindowStartupLocation="CenterScreen" Background="#0F1722" FontFamily="Segoe UI">
     <Grid>
         <Grid.ColumnDefinitions><ColumnDefinition Width="220" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
 
-        <Border Background="#111827" Padding="20">
+        <Border Background="#0B1018" Padding="20">
             <DockPanel LastChildFill="True">
                 <StackPanel DockPanel.Dock="Top">
-                    <StackPanel Orientation="Horizontal" Margin="0,4,0,42">
-                        <Border Width="30" Height="30" CornerRadius="9" Background="#7C73FF" Margin="0,0,10,0"><TextBlock Text="C" Foreground="White" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" /></Border>
-                        <StackPanel><TextBlock Text="ClearTrace" Foreground="White" FontWeight="Bold" FontSize="18" /><TextBlock Text="Désinstaller sans deviner" Foreground="#98A2B3" FontSize="11" /></StackPanel>
+                    <StackPanel Margin="0,4,0,42">
+                        <TextBlock Text="ClearTrace" Foreground="White" FontWeight="SemiBold" FontSize="21" />
+                        <TextBlock Text="Windows uninstaller" Foreground="#8291A8" FontSize="11" Margin="1,3,0,0" />
                     </StackPanel>
                     <TextBlock Text="ESPACE DE TRAVAIL" Foreground="#667085" FontSize="10" FontWeight="Bold" Margin="10,0,0,9" />
-                    <Button Style="{StaticResource NavButton}" Content="Applications" Background="#27243F" Foreground="White" />
+                    <Button Style="{StaticResource NavButton}" Content="Applications" Background="#1E3A5F" Foreground="White" />
                     <Button Style="{StaticResource NavButton}" Content="Journal local" Click="OpenJournal_Click" Margin="0,4,0,0" />
                 </StackPanel>
-                <Border DockPanel.Dock="Bottom" Background="#1F2937" CornerRadius="10" Padding="12">
+                <Border DockPanel.Dock="Bottom" Background="#141E2C" CornerRadius="8" Padding="12">
                     <StackPanel><TextBlock Text="Mode prudent" Foreground="White" FontWeight="SemiBold" /><TextBlock Text="Aucune trace n’est supprimée automatiquement." Foreground="#B7C1D6" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,0" /></StackPanel>
                 </Border>
             </DockPanel>
@@ -34,33 +34,33 @@
 
             <Grid Grid.Row="1" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="16" /><ColumnDefinition Width="*" /><ColumnDefinition Width="16" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
-                <Border Background="White" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="12" Padding="16"><StackPanel><TextBlock Text="LOGICIELS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Muted}" /><TextBlock Text="{Binding AppCount}" FontSize="23" FontWeight="SemiBold" Foreground="{StaticResource Ink}" Margin="0,5,0,0" /></StackPanel></Border>
-                <Border Grid.Column="2" Background="White" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="12" Padding="16"><StackPanel><TextBlock Text="ANALYSE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Muted}" /><TextBlock Text="Sur demande" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource Ink}" Margin="0,7,0,0" /></StackPanel></Border>
-                <Border Grid.Column="4" Background="#EEECFF" CornerRadius="12" Padding="16"><StackPanel><TextBlock Text="PROTECTION" FontSize="10" FontWeight="Bold" Foreground="#574FC7" /><TextBlock Text="Aucune suppression auto" FontSize="16" FontWeight="SemiBold" Foreground="#3E387E" Margin="0,7,0,0" /></StackPanel></Border>
+                <Border Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="8" Padding="16"><StackPanel><TextBlock Text="LOGICIELS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Muted}" /><TextBlock Text="{Binding AppCount}" FontSize="23" FontWeight="SemiBold" Foreground="{StaticResource Ink}" Margin="0,5,0,0" /></StackPanel></Border>
+                <Border Grid.Column="2" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="8" Padding="16"><StackPanel><TextBlock Text="ANALYSE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Muted}" /><TextBlock Text="Sur demande" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource Ink}" Margin="0,7,0,0" /></StackPanel></Border>
+                <Border Grid.Column="4" Background="#132C46" BorderBrush="#275275" BorderThickness="1" CornerRadius="8" Padding="16"><StackPanel><TextBlock Text="PROTECTION" FontSize="10" FontWeight="Bold" Foreground="#8CC7FF" /><TextBlock Text="Aucune suppression auto" FontSize="16" FontWeight="SemiBold" Foreground="#D6EBFF" Margin="0,7,0,0" /></StackPanel></Border>
             </Grid>
 
             <Grid Grid.Row="2"><Grid.ColumnDefinitions><ColumnDefinition Width="1.28*" /><ColumnDefinition Width="24" /><ColumnDefinition Width="0.72*" /></Grid.ColumnDefinitions>
                 <Grid><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="12" /><RowDefinition Height="*" /></Grid.RowDefinitions>
-                    <Border Background="White" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="10" Padding="12,9"><DockPanel><TextBlock Text="⌕" FontSize="18" Foreground="{StaticResource Muted}" Margin="2,0,8,0" /><TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" FontSize="14" VerticalContentAlignment="Center" Background="Transparent" ToolTip="Rechercher un logiciel ou un éditeur" /></DockPanel></Border>
+                    <Border Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="8" Padding="12,9"><DockPanel><TextBlock Text="⌕" FontSize="18" Foreground="{StaticResource Muted}" Margin="2,0,8,0" /><TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" FontSize="14" Foreground="{StaticResource Ink}" CaretBrush="{StaticResource Ink}" VerticalContentAlignment="Center" Background="Transparent" ToolTip="Rechercher un logiciel ou un éditeur" /></DockPanel></Border>
                     <TextBlock Grid.Row="1" Text="{Binding ResultsText}" Foreground="{StaticResource Muted}" FontSize="12" VerticalAlignment="Center" />
                     <ListBox Grid.Row="2" ItemsSource="{Binding FilteredApps}" SelectedItem="{Binding SelectedApp, Mode=TwoWay}" BorderThickness="0" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                        <ListBox.ItemTemplate><DataTemplate><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="42" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions><Border Width="36" Height="36" Background="#EEF2FF" CornerRadius="10" VerticalAlignment="Center"><TextBlock Text="◼" Foreground="#635BFF" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" /></Border><StackPanel Grid.Column="1" Margin="11,0,8,0"><TextBlock Text="{Binding Name}" Foreground="{StaticResource Ink}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" /><TextBlock Text="{Binding DisplayPublisher}" Foreground="{StaticResource Muted}" FontSize="12" TextTrimming="CharacterEllipsis" /></StackPanel><TextBlock Grid.Column="2" Text="{Binding DisplayVersion}" Foreground="{StaticResource Muted}" FontSize="12" VerticalAlignment="Center" /></Grid></DataTemplate></ListBox.ItemTemplate>
+                        <ListBox.ItemTemplate><DataTemplate><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="42" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions><Border Width="36" Height="36" Background="#20324A" CornerRadius="8" VerticalAlignment="Center"><TextBlock Text="■" Foreground="#60A5FA" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" /></Border><StackPanel Grid.Column="1" Margin="11,0,8,0"><TextBlock Text="{Binding Name}" Foreground="{StaticResource Ink}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" /><TextBlock Text="{Binding DisplayPublisher}" Foreground="{StaticResource Muted}" FontSize="12" TextTrimming="CharacterEllipsis" /></StackPanel><TextBlock Grid.Column="2" Text="{Binding DisplayVersion}" Foreground="{StaticResource Muted}" FontSize="12" VerticalAlignment="Center" /></Grid></DataTemplate></ListBox.ItemTemplate>
                     </ListBox>
                 </Grid>
-                <Border Grid.Column="2" Background="White" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="14" Padding="22">
+                <Border Grid.Column="2" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="8" Padding="22">
                     <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel>
                         <TextBlock Text="FICHE APPLICATION" Foreground="{StaticResource Muted}" FontWeight="Bold" FontSize="10" />
                         <TextBlock Text="{Binding SelectedApp.Name, TargetNullValue=Sélectionne un logiciel}" FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource Ink}" TextWrapping="Wrap" Margin="0,10,0,4" />
                         <TextBlock Text="{Binding SelectedApp.DisplayPublisher, TargetNullValue=Choisis une ligne à gauche pour voir les détails.}" Foreground="{StaticResource Muted}" TextWrapping="Wrap" />
-                        <Border Background="#F8F9FC" CornerRadius="10" Padding="12" Margin="0,20,0,0"><StackPanel><TextBlock Text="VERSION" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Muted}" /><TextBlock Text="{Binding SelectedApp.DisplayVersion}" Foreground="{StaticResource Ink}" Margin="0,3,0,0" /><TextBlock Text="EMPLACEMENT" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Muted}" Margin="0,13,0,0" /><TextBlock Text="{Binding SelectedApp.InstallLocation}" Foreground="{StaticResource Ink}" FontSize="12" TextWrapping="Wrap" Margin="0,3,0,0" /></StackPanel></Border>
+                        <Border Background="{StaticResource PanelMuted}" CornerRadius="8" Padding="12" Margin="0,20,0,0"><StackPanel><TextBlock Text="VERSION" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Muted}" /><TextBlock Text="{Binding SelectedApp.DisplayVersion}" Foreground="{StaticResource Ink}" Margin="0,3,0,0" /><TextBlock Text="EMPLACEMENT" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Muted}" Margin="0,13,0,0" /><TextBlock Text="{Binding SelectedApp.InstallLocation}" Foreground="{StaticResource Ink}" FontSize="12" TextWrapping="Wrap" Margin="0,3,0,0" /></StackPanel></Border>
                         <Button Content="Désinstaller" Style="{StaticResource PrimaryButton}" Click="Uninstall_Click" Margin="0,20,0,0" />
                         <Button Content="Analyser les traces" Style="{StaticResource SecondaryButton}" Click="Scan_Click" Margin="0,9,0,0" />
                         <TextBlock Text="La désinstallation officielle est toujours lancée en premier. ClearTrace ne supprime aucune trace sans ton accord." Foreground="{StaticResource Muted}" FontSize="11" TextWrapping="Wrap" Margin="0,14,0,0" />
                     </StackPanel></ScrollViewer>
                 </Border>
             </Grid>
-            <Border Grid.Row="3" Background="White" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,20,0,0">
-                <StackPanel><DockPanel><TextBlock Text="Traces candidates" FontWeight="SemiBold" Foreground="{StaticResource Ink}" /><TextBlock Text="{Binding StatusText}" Foreground="{StaticResource Muted}" FontSize="12" HorizontalAlignment="Right" /></DockPanel><ItemsControl ItemsSource="{Binding Residues}" Margin="0,10,0,0"><ItemsControl.ItemTemplate><DataTemplate><Border Background="#FFF9E8" CornerRadius="8" Padding="10" Margin="0,0,0,6"><StackPanel><TextBlock Text="{Binding Type}" FontWeight="SemiBold" Foreground="#7A5D00" /><TextBlock Text="{Binding Path}" Foreground="{StaticResource Ink}" FontSize="12" TextTrimming="CharacterEllipsis" /><TextBlock Text="{Binding Reason}" Foreground="{StaticResource Muted}" FontSize="11" /></StackPanel></Border></DataTemplate></ItemsControl.ItemTemplate></ItemsControl><TextBlock Text="Aucune analyse en cours. Sélectionne une application puis utilise « Analyser les traces »." Foreground="{StaticResource Muted}" FontSize="12" Visibility="{Binding ResiduesEmptyVisibility}" /></StackPanel>
+            <Border Grid.Row="3" Background="{StaticResource Panel}" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,20,0,0">
+                <StackPanel><DockPanel><TextBlock Text="Traces candidates" FontWeight="SemiBold" Foreground="{StaticResource Ink}" /><TextBlock Text="{Binding StatusText}" Foreground="{StaticResource Muted}" FontSize="12" HorizontalAlignment="Right" /></DockPanel><ItemsControl ItemsSource="{Binding Residues}" Margin="0,10,0,0"><ItemsControl.ItemTemplate><DataTemplate><Border Background="#3A301A" CornerRadius="6" Padding="10" Margin="0,0,0,6"><StackPanel><TextBlock Text="{Binding Type}" FontWeight="SemiBold" Foreground="#F5CD71" /><TextBlock Text="{Binding Path}" Foreground="{StaticResource Ink}" FontSize="12" TextTrimming="CharacterEllipsis" /><TextBlock Text="{Binding Reason}" Foreground="{StaticResource Muted}" FontSize="11" /></StackPanel></Border></DataTemplate></ItemsControl.ItemTemplate></ItemsControl><TextBlock Text="Aucune analyse en cours. Sélectionne une application puis utilise « Analyser les traces »." Foreground="{StaticResource Muted}" FontSize="12" Visibility="{Binding ResiduesEmptyVisibility}" /></StackPanel>
             </Border>
         </Grid>
     </Grid>
