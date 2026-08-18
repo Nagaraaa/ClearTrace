@@ -9,6 +9,7 @@ internal sealed class MainForm : Form
     private readonly DataGridView _residueGrid = NewGrid();
     private readonly Label _status = new() { Dock = DockStyle.Bottom, Height = 30, Padding = new Padding(12, 7, 12, 0), Text = "Chargement…" };
     private List<InstalledApp> _apps = [];
+    private bool _isBusy;
 
     public MainForm()
     {
@@ -27,19 +28,25 @@ internal sealed class MainForm : Form
 
         var top = new Panel { Dock = DockStyle.Top, Height = 74, Padding = new Padding(12) };
         top.Controls.Add(_search);
-        var split = new SplitContainer { Dock = DockStyle.Fill, Orientation = Orientation.Horizontal, SplitterDistance = 350, Panel2MinSize = 160 };
+        var split = new SplitContainer { Dock = DockStyle.Fill, Orientation = Orientation.Horizontal };
         split.Panel1.Controls.Add(_appsGrid);
         split.Panel2.Controls.Add(_residueGrid);
         split.Panel2.Controls.Add(new Label { Text = "Traces candidates — affichées pour contrôle, jamais supprimées automatiquement", Dock = DockStyle.Top, Height = 30, Padding = new Padding(8, 8, 8, 0), ForeColor = Color.DimGray });
         Controls.AddRange([split, _status, actions, top]);
 
-        refresh.Click += (_, _) => LoadApps();
+        refresh.Click += async (_, _) => await LoadAppsAsync();
         _search.TextChanged += (_, _) => BindApps();
         _appsGrid.SelectionChanged += (_, _) => ClearResidues();
         uninstall.Click += (_, _) => UninstallSelected();
-        scan.Click += (_, _) => ScanSelected();
+        scan.Click += async (_, _) => await ScanSelectedAsync();
         openLog.Click += (_, _) => OpenLog();
-        Shown += (_, _) => LoadApps();
+        Shown += async (_, _) =>
+        {
+            // SplitContainer has no usable dimensions during construction. Configure it only after layout.
+            split.Panel2MinSize = 160;
+            split.SplitterDistance = Math.Clamp(split.Height * 3 / 5, split.Panel1MinSize, split.Height - split.Panel2MinSize - split.SplitterWidth);
+            await LoadAppsAsync();
+        };
     }
 
     private static DataGridView NewGrid() => new()
@@ -50,11 +57,20 @@ internal sealed class MainForm : Form
         BackgroundColor = Color.White, BorderStyle = BorderStyle.None
     };
 
-    private void LoadApps()
+    private async Task LoadAppsAsync()
     {
+        if (_isBusy) return;
+        _isBusy = true;
         Cursor = Cursors.WaitCursor;
-        try { _apps = InstalledApps.Load().ToList(); BindApps(); _status.Text = $"{_apps.Count} logiciels détectés dans le Registre Windows."; }
-        finally { Cursor = Cursors.Default; }
+        _status.Text = "Inventaire des logiciels en cours…";
+        try
+        {
+            _apps = (await Task.Run(InstalledApps.Load)).ToList();
+            BindApps();
+            _status.Text = $"{_apps.Count} logiciels détectés dans le Registre Windows.";
+        }
+        catch (Exception ex) { _status.Text = $"Échec de l’inventaire : {ex.Message}"; }
+        finally { _isBusy = false; Cursor = Cursors.Default; }
     }
 
     private void BindApps()
@@ -89,14 +105,23 @@ internal sealed class MainForm : Form
         catch (Exception ex) { _status.Text = $"Impossible de lancer la désinstallation : {ex.Message}"; }
     }
 
-    private void ScanSelected()
+    private async Task ScanSelectedAsync()
     {
+        if (_isBusy) return;
         var app = SelectedApp();
         if (app is null) { _status.Text = "Sélectionne un logiciel."; return; }
-        var candidates = ResidueScanner.Scan(app);
-        _residueGrid.DataSource = candidates;
-        AuditLog.Write("residue-scan", app);
-        _status.Text = candidates.Count == 0 ? "Aucune trace candidate trouvée par le scan prudent." : $"{candidates.Count} trace(s) candidate(s) : vérifie-les avant toute action manuelle.";
+        _isBusy = true;
+        Cursor = Cursors.WaitCursor;
+        _status.Text = $"Analyse des traces de {app.Name}…";
+        try
+        {
+            var candidates = await Task.Run(() => ResidueScanner.Scan(app));
+            _residueGrid.DataSource = candidates;
+            AuditLog.Write("residue-scan", app);
+            _status.Text = candidates.Count == 0 ? "Aucune trace candidate trouvée par le scan prudent." : $"{candidates.Count} trace(s) candidate(s) : vérifie-les avant toute action manuelle.";
+        }
+        catch (Exception ex) { _status.Text = $"Échec de l’analyse : {ex.Message}"; }
+        finally { _isBusy = false; Cursor = Cursors.Default; }
     }
 
     private void ClearResidues() => _residueGrid.DataSource = null;
