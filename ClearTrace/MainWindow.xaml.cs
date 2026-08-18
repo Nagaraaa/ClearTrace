@@ -55,7 +55,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         var selectedName = SelectedApp?.Name;
         var query = SearchText.Trim();
-        var result = string.IsNullOrWhiteSpace(query) ? _apps : _apps.Where(app => app.Name.Contains(query, StringComparison.CurrentCultureIgnoreCase) || app.DisplayPublisher.Contains(query, StringComparison.CurrentCultureIgnoreCase));
+        var result = ApplicationSearch.Filter(_apps, query);
         FilteredApps.Clear();
         foreach (var app in result) FilteredApps.Add(app);
         if (SelectedApp is not null && !FilteredApps.Contains(SelectedApp)) SelectedApp = null;
@@ -85,13 +85,15 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private void Uninstall_Click(object sender, RoutedEventArgs e)
     {
         if (SelectedApp is null) { StatusText = "Sélectionne une application avant de la désinstaller."; return; }
-        if (string.IsNullOrWhiteSpace(SelectedApp.UninstallCommand)) { StatusText = "Aucune commande de désinstallation n’est disponible pour cette application."; return; }
-        var confirmation = MessageBox.Show($"Lancer la désinstallation officielle de :\n\n{SelectedApp.Name}\n\nClearTrace ne supprimera aucune trace automatiquement.", "Confirmer la désinstallation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+        if (!UninstallCommandParser.TryParse(SelectedApp.UninstallCommand, out var plan, out var error)) { StatusText = error; return; }
+        var launchPlan = plan!;
+        var kind = launchPlan.Type == UninstallCommandType.WindowsInstaller ? "Windows Installer (MSI)" : "exécutable";
+        var confirmation = MessageBox.Show($"Lancer la désinstallation officielle de :\n\n{SelectedApp.Name}\n\nType détecté : {kind}\nExécutable : {launchPlan.Executable}\nArguments : {launchPlan.Arguments}\n\nClearTrace ne supprimera aucune trace automatiquement.", "Confirmer la désinstallation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (confirmation != MessageBoxResult.Yes) return;
         try
         {
             AuditLog.Write("uninstall-launched", SelectedApp);
-            Process.Start(new ProcessStartInfo("cmd.exe", "/c " + SelectedApp.UninstallCommand) { UseShellExecute = true });
+            Process.Start(launchPlan.CreateStartInfo());
             StatusText = $"Désinstallation lancée : {SelectedApp.Name}.";
         }
         catch (Exception ex) { StatusText = $"Impossible de lancer la désinstallation : {ex.Message}"; }
