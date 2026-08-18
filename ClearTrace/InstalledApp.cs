@@ -2,7 +2,7 @@ using Microsoft.Win32;
 
 namespace ClearTrace;
 
-internal sealed record InstalledApp(string Name, string? Version, string? Publisher, string? InstallLocation,
+public sealed record InstalledApp(string Name, string? Version, string? Publisher, string? InstallLocation,
     string? UninstallCommand, string RegistryPath)
 {
     public string DisplayVersion => string.IsNullOrWhiteSpace(Version) ? "—" : Version;

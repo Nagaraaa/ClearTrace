@@ -1,6 +1,8 @@
+using System.IO;
+
 namespace ClearTrace;
 
-internal sealed record ResidueCandidate(string Path, string Type, string Reason);
+public sealed record ResidueCandidate(string Path, string Type, string Reason);
 
 internal static class ResidueScanner
 {
@@ -18,7 +20,7 @@ internal static class ResidueScanner
 
     private static void AddDirectory(List<ResidueCandidate> result, string? path, string type, string reason)
     {
-        if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path)) result.Add(new ResidueCandidate(path, type, reason));
+        if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path)) result.Add(new ResidueCandidate(path!, type, reason));
     }
 
     private static string SanitizeFolderName(string name)
