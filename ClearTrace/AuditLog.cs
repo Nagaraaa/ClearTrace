@@ -7,12 +7,12 @@ internal static class AuditLog
 {
     private static readonly string LogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ClearTrace", "audit.jsonl");
 
-    public static void Write(string action, InstalledApp app)
+    public static void Write(string action, InstalledApp app, object? details = null)
     {
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(LogPath)!);
-            var entry = new { timestampUtc = DateTimeOffset.UtcNow, action, application = app.Name, app.Version, app.Publisher, app.InstallLocation, app.UninstallCommand };
+            var entry = new { timestampUtc = DateTimeOffset.UtcNow, action, application = app.Name, app.Version, app.Publisher, app.InstallLocation, app.UninstallCommand, details };
             File.AppendAllText(LogPath, JsonSerializer.Serialize(entry) + Environment.NewLine);
         }
         catch (Exception ex) { ApplicationLog.WriteException("Unable to write audit log", ex); }

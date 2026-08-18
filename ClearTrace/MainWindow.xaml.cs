@@ -82,7 +82,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         finally { _isBusy = false; OnPropertyChanged(nameof(ResiduesEmptyVisibility)); }
     }
 
-    private void Uninstall_Click(object sender, RoutedEventArgs e)
+    private async void Uninstall_Click(object sender, RoutedEventArgs e)
     {
         if (SelectedApp is null) { StatusText = "Sélectionne une application avant de la désinstaller."; return; }
         if (!UninstallCommandParser.TryParse(SelectedApp.UninstallCommand, out var plan, out var error)) { StatusText = error; return; }
@@ -90,13 +90,19 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         var kind = launchPlan.Type == UninstallCommandType.WindowsInstaller ? "Windows Installer (MSI)" : "exécutable";
         var confirmation = MessageBox.Show($"Lancer la désinstallation officielle de :\n\n{SelectedApp.Name}\n\nType détecté : {kind}\nExécutable : {launchPlan.Executable}\nArguments : {launchPlan.Arguments}\n\nClearTrace ne supprimera aucune trace automatiquement.", "Confirmer la désinstallation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         if (confirmation != MessageBoxResult.Yes) return;
+        _isBusy = true;
+        StatusText = $"Désinstallation en cours : {SelectedApp.Name}…";
         try
         {
-            AuditLog.Write("uninstall-launched", SelectedApp);
-            Process.Start(launchPlan.CreateStartInfo());
-            StatusText = $"Désinstallation lancée : {SelectedApp.Name}.";
+            AuditLog.Write("uninstall-started", SelectedApp, new { type = launchPlan.Type.ToString(), launchPlan.Executable, launchPlan.Arguments });
+            var result = await new UninstallSessionRunner().RunAsync(SelectedApp, launchPlan, TimeSpan.FromMinutes(2));
+            AuditLog.Write("uninstall-result", SelectedApp, new { status = result.Status.ToString(), result.ExitCode, result.Message });
+            _isBusy = false;
+            await LoadAppsAsync();
+            StatusText = result.Message;
         }
         catch (Exception ex) { StatusText = $"Impossible de lancer la désinstallation : {ex.Message}"; }
+        finally { _isBusy = false; }
     }
 
     private void OpenJournal_Click(object sender, RoutedEventArgs e)

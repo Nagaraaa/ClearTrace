@@ -2,7 +2,7 @@
 
 Un désinstalleur Windows libre, transparent et prudent. ClearTrace lance l’outil officiel de désinstallation du logiciel, conserve un journal local lisible et affiche des traces candidates sans jamais les supprimer automatiquement.
 
-## MVP v0.3.0
+## MVP v0.4.0
 
 - inventaire depuis les emplacements Windows 64 bits, 32 bits et utilisateur ;
 - interface WPF moderne : navigation claire, recherche instantanée, liste lisible et fiche détaillée ;
@@ -12,6 +12,7 @@ Un désinstalleur Windows libre, transparent et prudent. ClearTrace lance l’ou
 - journal local JSONL : `%LOCALAPPDATA%\\ClearTrace\\audit.jsonl`.
 - instance unique, journal de diagnostic local et tests de fondation exécutables hors interface ;
 - lancement des désinstalleurs sans passer par `cmd.exe` ni PowerShell.
+- suivi du désinstalleur : code de sortie et vérification du retrait de l’entrée Windows.
 
 ## Limites assumées
 

@@ -64,3 +64,45 @@ public static class UninstallCommandParser
         return true;
     }
 }
+
+public enum UninstallSessionStatus
+{
+    CompletedAndRemoved,
+    CompletedButStillListed,
+    Failed,
+    StillRunning,
+    LaunchFailed
+}
+
+public sealed record UninstallSessionResult(UninstallSessionStatus Status, int? ExitCode, string Message)
+{
+    public bool IsTerminal => Status is not UninstallSessionStatus.StillRunning;
+}
+
+public sealed class UninstallSessionRunner
+{
+    public async Task<UninstallSessionResult> RunAsync(InstalledApp app, UninstallLaunchPlan plan, TimeSpan observationWindow, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            using var process = Process.Start(plan.CreateStartInfo());
+            if (process is null) return new(UninstallSessionStatus.LaunchFailed, null, "Windows n’a pas pu démarrer le désinstalleur.");
+
+            var exitTask = process.WaitForExitAsync(cancellationToken);
+            var exited = await Task.WhenAny(exitTask, Task.Delay(observationWindow, cancellationToken)) == exitTask;
+            if (!exited) return new(UninstallSessionStatus.StillRunning, null, "Le désinstalleur est toujours en cours. Le résultat sera à vérifier après sa fermeture.");
+
+            var stillListed = await Task.Run(() => InstalledApps.Load().Any(candidate => candidate.RegistryPath == app.RegistryPath), cancellationToken);
+            if (process.ExitCode != 0) return new(UninstallSessionStatus.Failed, process.ExitCode, $"Le désinstalleur a terminé avec le code {process.ExitCode}.");
+            return stillListed
+                ? new(UninstallSessionStatus.CompletedButStillListed, process.ExitCode, "Le désinstalleur a terminé, mais l’application est toujours enregistrée dans Windows.")
+                : new(UninstallSessionStatus.CompletedAndRemoved, process.ExitCode, "Désinstallation terminée : l’application n’est plus enregistrée dans Windows.");
+        }
+        catch (OperationCanceledException) { return new(UninstallSessionStatus.StillRunning, null, "L’observation a été interrompue ; vérifie l’état de l’application après la fermeture du désinstalleur."); }
+        catch (Exception ex)
+        {
+            ApplicationLog.WriteException("Unable to run uninstaller", ex);
+            return new(UninstallSessionStatus.LaunchFailed, null, $"Impossible de démarrer le désinstalleur : {ex.Message}");
+        }
+    }
+}

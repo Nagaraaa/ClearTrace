@@ -9,7 +9,7 @@ public sealed record InstalledApp(string Name, string? Version, string? Publishe
     public string DisplayPublisher => string.IsNullOrWhiteSpace(Publisher) ? "—" : Publisher;
 }
 
-internal static class InstalledApps
+public static class InstalledApps
 {
     private const string UninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
 
